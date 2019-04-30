@@ -1,0 +1,25 @@
+Package: rwrmed
+Type: Package
+Title: Regression-with-residuals (RWR) Analysis of Causal Mediation
+Version: 0.1.0
+Authors@R: person("Xiang", "Zhou", email = "xiang_zhou@fas.harvard.edu",
+  role = c("aut", "cre"))
+Description: This packages implements the regression-with-residuals (RWR) approach to
+  causal mediation analysis, allowing for post-treatment confounding of the mediator-outcome
+  relationship. The rwrmed() function fits user-specified mediator and outcome models with
+  residualized post-treatment confounders. The decomp() function implements a two-component
+  decomposition of the total effect into the randomized interventional analogues of the natural
+  direct effect (rNDE) and the natural indirect effect (rNIE), as well as a four-component
+  decomposition of the total effect into the controlled direct effect (CDE) and the randomized analogues
+  of the reference interaction effect (rREFINT), the mediated interaction effect (rMEDINT),
+  and the pure indirect effect (rPIE).
+Depends:
+    R (>= 3.3.0),
+    stats
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.0
+URL: http://github.com/xiangzhou09/rwrmed
+BugReports: http://github.com/xiangzhou09/rwrmed
+
