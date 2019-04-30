@@ -98,15 +98,6 @@ decomp <- function(object, a0 = 0, a1 = 1, m = 0, bootstrap = TRUE, rep = 250){
       glm_partial <- partial(glm, data = data, weights = weights)
       zmodels <- Map(glm_partial, z_forms, z_families)
 
-      # # refit the post-treatment confounder models
-      # zmodels <- vector("list", nz)
-      #
-      # for(j in seq(1, nz)){
-      #   z_form <- formula(object$zmodels[[j]])
-      #   z_family <- family(object$zmodels[[j]])
-      #   zmodels[[j]] <- glm(z_form, z_family, data = data, weights = weights)
-      # }
-
       # take pre- and post-treatment confounders
       x <- data[, var_names$pre_cov, drop = FALSE]
       z <- data[, var_names$post_cov, drop = FALSE]

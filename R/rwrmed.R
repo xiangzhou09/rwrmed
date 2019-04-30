@@ -124,8 +124,12 @@ rwrmed <- function(treatment, pre_cov, zmodels, y_form, m_form,
   if(missing(m_form)) stop("m_form must be provided.")
 
   # check weights
-  if(missing(weights)) weights <- rep(1, n)
-  if((!is.numeric(weights)) || (length(weights) != n)) stop("weights must be a numeric vector of length nrow(data)")
+  if(missing(weights)) weights <- rep(1, n) else{
+    weights <- eval(substitute(weights), data, parent.frame())
+    if((!is.numeric(weights)) || (length(weights) != n)){
+      stop("weights must be a numeric vector of length nrow(data)")
+    }
+  }
   data$weights <- weights
 
   # get mediator, outcome, and post_cov names
