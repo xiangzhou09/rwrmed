@@ -25,7 +25,7 @@
 #'   approach to causal mediation.
 #'
 #' a0 = 0; a1 = 1; m = 0; bootstrap = TRUE; rep = 250
-decomp <- function(object, a0 = 0, a1 = 1, m = 0, bootstrap = TRUE, rep = 250){
+decomp <- function(object, a0 = 0, a1 = 1, m = 0, bootstrap = TRUE, rep = 500){
 
   var_names <- object$var_names
 
