@@ -25,30 +25,49 @@ decomp <- function(object, a0 = 0, a1 = 1, m = 0){
   var_names <- object$var_names
 
   # mediator and outcome model coefs
-  coefs_y <- coef(object$y_model)
-  coefs_m <- coef(object$m_model)
 
-  theta0 <- coefs_m["(Intercept)"]
-  theta2 <- coefs_m[var_names$treatment]
+  coefs_y <- coef(object$y_model)
 
   beta2 <- coefs_y[var_names$treatment]
   beta4 <- coefs_y[var_names$mediator]
   beta5 <- (coefs_y[paste0(var_names$treatment,":",var_names$mediator)] %||%
               coefs_y[paste0(var_names$mediator,":",var_names$treatment)]) %||% 0
 
+  # effect decomposition in general
+
+  if (object$m_model$family$link != "identity"){
+
+    newdata0 <- newdata1 <- object$data_ed
+    newdata0[[var_names$treatment]] <- a0
+    newdata1[[var_names$treatment]] <- a1
+
+    pred0 <- weighted.mean(predict.glm(object$m_model, newdata0, type = "response"), w = newdata0$weights)
+    pred1 <- weighted.mean(predict.glm(object$m_model, newdata1, type = "response"), w = newdata1$weights)
+
+  } else {
+
+    coefs_m <- coef(object$m_model)
+
+    theta0 <- coefs_m["(Intercept)"]
+    theta2 <- coefs_m[var_names$treatment]
+
+    pred0 <- theta0 + theta2 * a0
+    pred1 <- theta0 + theta2 * a1
+  }
+
   # effect decomposition
   CDE <- (a1 - a0) * (beta2 + beta5 * m)
-  rINTREF <- (a1 - a0) * beta5 * (theta0 + theta2 * a0  - m)
+  rINTREF <- (a1 - a0) * beta5 * (pred0  - m)
   rNDE <- CDE + rINTREF
 
-  rPIE <- (a1 - a0) * theta2 * (beta4 + beta5 * a0)
-  rINTMED <- theta2 * beta5 * (a1 - a0)^2
+  rPIE <- (pred1 - pred0) * (beta4 + beta5 * a0)
+  rINTMED <- (pred1 - pred0) * beta5 * (a1 - a0)
   rNIE <- rPIE + rINTMED
 
   rATE <- rNDE + rNIE
 
   # output
-  out <- list(NULL)
+  out <- NULL
   out$twocomp <- setNames(c(rNDE, rNIE, rATE), c("rNDE", "rNIE", "rATE"))
   out$fourcomp = setNames(c(CDE, rINTREF, rPIE, rINTMED, rATE),
                           c("CDE", "rINTREF", "rPIE", "rINTMED", "rATE"))

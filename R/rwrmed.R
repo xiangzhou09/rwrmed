@@ -33,24 +33,55 @@
 #'
 #' @examples
 #'
+#' ## an example with a continuous mediator ##
+#'
+#' # treatment and pre-treatment covariates
 #' treatment <- "tone_eth"
 #' pre_cov <- c("ppage", "female", "hs", "sc", "ba", "ppincimp")
 #'
+#' # outcome and mediator models
 #' y_form <- immigr ~ ppage + female + hs + sc + ba + ppincimp +
 #'  tone_eth + emo + tone_eth * emo + p_harm
 #' m_form <- emo ~ ppage + female + hs + sc + ba + ppincimp + tone_eth
 #'
-#' # model for the post-treatment covariate
-#' p_harm_mod <- lm(p_harm ~ ppage + female + hs + sc + ba + ppincimp + tone_eth,
+#' # model for a post-treatment covariate
+#' m1 <- lm(p_harm ~ ppage + female + hs + sc + ba + ppincimp + tone_eth,
 #'  data = immigration)
 #'
-#' fit <- rwrmed(treatment = treatment, pre_cov = pre_cov, zmodels = list(p_harm_mod),
+#' # effect decomposition using RWR
+#' fit1 <- rwrmed(treatment = treatment, pre_cov = pre_cov, zmodels = list(m1),
 #'   y_form = y_form, m_form = m_form, data = immigration)
 #'
-#' summary(fit$m_model)
-#' summary(fit$y_model)
+#' out1 <- decomp(fit1)
 #'
-#' decomp(fit)
+#' ## an example with a binary mediator ##
+#'
+#' # treatment and pre-treatment covariates
+#' treatment <- "democ"
+#' pre_cov <- c("ally", "trade", "h1", "i1", "p1", "e1", "r1", "male", "white", "age", "ed4")
+#'
+#' # outcome and mediator models
+#' y_form <- strike ~ ally + trade + h1 + i1 + p1 + e1 + r1 + male + white + age + ed4 + democ +
+#'   immoral + democ * immoral + threatc + cost + successc
+#' m_form <- immoral ~ ally + trade + h1 + i1 + p1 + e1 + r1 + male + white + age + ed4 + democ
+#'
+#' # models for post-treatment covariates
+#' m1 <- lm(threatc ~ ally + trade + h1 + i1 + p1 + e1 + r1 + male + white + age + ed4 + democ,
+#'   data = peace)
+#' m2 <- lm(cost ~ ally + trade + h1 + i1 + p1 + e1 + r1 + male + white + age + ed4 + democ,
+#'   data = peace)
+#' m3 <- lm(successc ~ ally + trade + h1 + i1 + p1 + e1 + r1 + male + white + age + ed4 + democ,
+#'   data = peace)
+#'
+#' # effect decomposition using RWR
+#'
+#' fit2 <- rwrmed(treatment = treatment, pre_cov = pre_cov, zmodels = list(m1, m2, m3),
+#'   y_form = y_form, m_form = m_form, m_family = binomial("logit"), data = peace)
+#'
+#' summary(fit2$m_model)
+#'
+#' out2 <- decomp(fit2)
+#'
 #'
 #' @references Wodtke, Geoffrey T. and Xiang Zhou. 2019. "Effect Decomposition in the Presence of
 #'   Treatment-induced Confounding: A Regression-with-Residuals Approach."
