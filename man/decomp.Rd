@@ -4,7 +4,8 @@
 \alias{decomp}
 \title{Causal Effect Decomposition Based on a Fitted \code{rwrmed} Model}
 \usage{
-decomp(object, a0 = 0, a1 = 1, m = 0)
+decomp(object, a0 = 0, a1 = 1, m = 0, bootstrap = TRUE,
+  rep = 250)
 }
 \arguments{
 \item{object}{An object of class \code{rwrmed}.}
@@ -14,6 +15,11 @@ decomp(object, a0 = 0, a1 = 1, m = 0)
 \item{a1}{The level of treatment to be contrasted with the baseline.}
 
 \item{m}{The level of the mediator at which the CDE is evaluated.}
+
+\item{bootstrap}{Whether to compute standard errors and 95% confidence intervals using the
+nonparametric bootstrap.}
+
+\item{rep}{Number of bootstrap replications if \code{bootstrap = TRUE}. Default is 250.}
 }
 \value{
 A list of two elements.
@@ -31,4 +37,6 @@ A list of two elements.
 \seealso{
 \code{\link{rwrmed}} for implementing the regression-with-residuals (RWR)
   approach to causal mediation.
+
+a0 = 0; a1 = 1; m = 0; bootstrap = TRUE; rep = 250
 }

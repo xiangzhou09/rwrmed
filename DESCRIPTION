@@ -16,6 +16,8 @@ Description: This packages implements the regression-with-residuals (RWR) approa
 Depends:
     R (>= 3.3.0),
     stats
+Imports:
+    pryr
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

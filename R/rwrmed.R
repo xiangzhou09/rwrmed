@@ -22,9 +22,11 @@
 #' @return An object of class \code{rwrmed}.
 #'  \item{y_model}{The fitted outcome model.}
 #'  \item{m_model}{The fitted mediator model.}
+#'  \item{z_models}{Fitted \code{lm} or \code{glm} models for the post-treatment confounders.}
 #'  \item{var_names}{Names of the treatment variable, the mediator, the outcome, and
 #'     the pretreatment and posttreatment covariates}
-#'  \item{data_ed}{The data frame purged of observations with missing variables.}
+#'  \item{data}{The original data frame.}
+#'  \item{data_ed}{The data frame with residualized pre- and post-treatment covariates}
 #'  \item{call}{The matched call.}
 #' @import stats
 #' @export
@@ -124,6 +126,7 @@ rwrmed <- function(treatment, pre_cov, zmodels, y_form, m_form,
   # check weights
   if(missing(weights)) weights <- rep(1, n)
   if((!is.numeric(weights)) || (length(weights) != n)) stop("weights must be a numeric vector of length nrow(data)")
+  data$weights <- weights
 
   # get mediator, outcome, and post_cov names
   mediator <- all.vars(m_form)[1L]
@@ -137,24 +140,16 @@ rwrmed <- function(treatment, pre_cov, zmodels, y_form, m_form,
   x <- data[, pre_cov, drop = FALSE]
   z <- data[, post_cov, drop = FALSE]
 
-  # delete rows with missing data
+  # check missing data
   badRow <- is.na(a) | is.infinite(a) | is.na(m) | is.infinite(m) | is.na(y) | is.infinite(y)
   badRow <- badRow | apply(x, 1, function(v) any(is.na(v) | is.infinite(v)))
   badRow <- badRow | apply(z, 1, function(v) any(is.na(v) | is.infinite(v)))
+  if(any(badRow)) stop("data contain observations with missing variables")
 
-  # cleaned variables
-  data_ed <- data[!badRow, , drop = FALSE]
-  n <- nrow(data_ed)
-
-  a <- data_ed[[treatment]]
-  m <- data_ed[[mediator]]
-  y <- data_ed[[outcome]]
-  x <- data_ed[, pre_cov, drop = FALSE]
-  z <- data_ed[, post_cov, drop = FALSE]
-  data_ed$weights <- weights[!badRow];
+  # copy data to date_ed
+  data_ed <- data
 
   # demean x and residualize z
-
   for(i in seq_along(x)) data_ed[[names(x)[i]]] <- demean(x[[i]], data_ed$weights)
   for(i in seq_along(z)) data_ed[[names(z)[i]]] <- z[[i]] - zmodels[[i]][["fitted.values"]]
 
@@ -162,13 +157,13 @@ rwrmed <- function(treatment, pre_cov, zmodels, y_form, m_form,
   m_model <- glm(formula = m_form, family = m_family, data = data_ed, weights = weights)
   y_model <- lm(formula = y_form, data = data_ed, weights = weights)
 
-  out <- list(y_model = y_model, m_model = m_model,
+  out <- list(y_model = y_model, m_model = m_model, zmodels = zmodels,
               var_names = list(treatment = treatment,
                                mediator = mediator,
                                outcome = outcome,
                                pre_cov = pre_cov,
                                post_cov = post_cov),
-              data_ed = data_ed, call = cl)
+              data = data, data_ed = data_ed, call = cl)
   class(out) = c("rwrmed", "list")
   out
 }

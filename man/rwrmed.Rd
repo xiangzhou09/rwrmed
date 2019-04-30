@@ -32,9 +32,11 @@ post-treatment confounders of the mediator-outcome relationship.}
 An object of class \code{rwrmed}.
  \item{y_model}{The fitted outcome model.}
  \item{m_model}{The fitted mediator model.}
+ \item{z_models}{Fitted \code{lm} or \code{glm} models for the post-treatment confounders.}
  \item{var_names}{Names of the treatment variable, the mediator, the outcome, and
     the pretreatment and posttreatment covariates}
- \item{data_ed}{The data frame purged of observations with missing variables.}
+ \item{data}{The original data frame.}
+ \item{data_ed}{The data frame with residualized pre- and post-treatment covariates}
  \item{call}{The matched call.}
 }
 \description{

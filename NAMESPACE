@@ -3,3 +3,4 @@
 export(decomp)
 export(rwrmed)
 import(stats)
+importFrom(pryr,partial)
