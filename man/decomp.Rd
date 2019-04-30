@@ -26,7 +26,7 @@ A list of two elements.
   the randomized interventional analogues of the natural direct effect (rNDE) and the natural
   indirect effect (rNIE). It also returns a four-component decomposition of the total effect into
   the controlled direct effect (CDE) and the randomized analogues of the reference interaction
-  effect (rREFINT), the mediated interaction effect (rMEDINT), and the pure indirect effect (rPIE).
+  effect (rINTREF), the mediated interaction effect (rINTMED), and the pure indirect effect (rPIE).
 }
 \seealso{
 \code{\link{rwrmed}} for implementing the regression-with-residuals (RWR)

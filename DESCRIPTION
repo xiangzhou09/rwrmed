@@ -11,7 +11,7 @@ Description: This packages implements the regression-with-residuals (RWR) approa
   decomposition of the total effect into the randomized interventional analogues of the natural
   direct effect (rNDE) and the natural indirect effect (rNIE), as well as a four-component
   decomposition of the total effect into the controlled direct effect (CDE) and the randomized analogues
-  of the reference interaction effect (rREFINT), the mediated interaction effect (rMEDINT),
+  of the reference interaction effect (rINTREF), the mediated interaction effect (rINTMED),
   and the pure indirect effect (rPIE).
 Depends:
     R (>= 3.3.0),
